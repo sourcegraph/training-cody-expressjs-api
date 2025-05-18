@@ -52,24 +52,6 @@ router.get('/pets/random/batch/:count', (req, res) => {
   res.json(pets);
 });
 
-// Route debugging endpoint
-router.get('/debug/routes', (req, res) => {
-  const routes = [];
-  
-  router.stack.forEach((middleware) => {
-    if (middleware.route) {
-      // routes registered directly on the app
-      const methods = Object.keys(middleware.route.methods).filter(method => middleware.route.methods[method]);
-      routes.push({
-        path: middleware.route.path,
-        methods: methods
-      });
-    }
-  });
-  
-  res.json(routes);
-});
-
 // API documentation endpoint
 router.get('/', (req, res) => {
   res.json({
