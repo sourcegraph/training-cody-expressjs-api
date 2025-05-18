@@ -1,0 +1,10 @@
+{
+    "java.jdt.ls.java.home": "/Users/trly/.local/share/mise/installs/java/temurin-21.0.7+6.0.LTS",
+    "java.import.gradle.java.home": "/Users/trly/.local/share/mise/installs/java/temurin-21.0.7+6.0.LTS",
+    "debug.javascript.defaultRuntimeExecutable": {
+        "pwa-node": "/Users/trly/.local/share/mise/shims/node"
+    },
+    "amp.commands.allowlist": [
+        "rm routes/main.js"
+    ]
+}
