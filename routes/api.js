@@ -5,33 +5,70 @@ const { v4: uuidv4 } = require('uuid');
 // Pet statuses according to the Swagger Petstore schema
 const PET_STATUSES = ["available", "pending", "sold"];
 
+// Match pet names with Spring Boot implementation
+const PET_NAMES = [
+  "Buddy", "Max", "Charlie", "Lucy", "Cooper", "Bella", "Luna", "Daisy",
+  "Rocky", "Sadie", "Milo", "Bailey", "Jack", "Oliver", "Chloe", "Pepper"
+];
+
+// Match categories with Spring Boot implementation
+const CATEGORIES = [
+  "Dog", "Cat", "Bird", "Fish", "Reptile", "Rodent", "Exotic"
+];
+
+// Match tag names with Spring Boot implementation
+const TAG_NAMES = [
+  "Friendly", "Playful", "Trained", "Young", "Adult", "Senior",
+  "Vaccinated", "Neutered", "Spayed", "Rescue", "Purebred", "Hypoallergenic"
+];
+
 /**
  * Generate a random pet based on the Swagger Petstore schema
+ * Updated to match Spring Boot implementation
  */
 function generateRandomPet() {
+  // First generate the category so we can use it for photo URLs
+  const category = generateRandomCategory();
+  
+  // Random number of photo URLs (1-3)
+  const photoCount = Math.floor(Math.random() * 3) + 1;
+  
   return {
-    id: Math.floor(Math.random() * 10000) + 1,
-    name: `Pet-${uuidv4().substring(0, 8)}`,
-    category: {
-      id: Math.floor(Math.random() * 5) + 1,
-      name: ["Dogs", "Cats", "Birds", "Reptiles", "Fish"][Math.floor(Math.random() * 5)]
-    },
-    photoUrls: [
-      `https://example.com/pet/photos/${Math.floor(Math.random() * 9000) + 1000}.jpg`,
-      `https://example.com/pet/photos/${Math.floor(Math.random() * 9000) + 1000}.jpg`
-    ],
-    tags: [
-      {
-        id: Math.floor(Math.random() * 10) + 1,
-        name: ["friendly", "trained", "vaccinated", "young", "senior"][Math.floor(Math.random() * 5)]
-      },
-      {
-        id: Math.floor(Math.random() * 10) + 11,
-        name: ["playful", "cuddly", "energetic", "calm", "social"][Math.floor(Math.random() * 5)]
-      }
-    ],
+    id: Math.floor(Math.random() * 10000),
+    name: getRandomElement(PET_NAMES),
+    category: category,
+    photoUrls: Array.from({ length: photoCount }, () => `/images/${category.name}.jpg`),
+    tags: generateRandomTags(),
     status: PET_STATUSES[Math.floor(Math.random() * PET_STATUSES.length)]
   };
+}
+
+/**
+ * Generate a random category
+ */
+function generateRandomCategory() {
+  return {
+    id: Math.floor(Math.random() * 100),
+    name: getRandomElement(CATEGORIES)
+  };
+}
+
+/**
+ * Generate random tags (0-3)
+ */
+function generateRandomTags() {
+  const count = Math.floor(Math.random() * 4); // 0-3 tags
+  return Array.from({ length: count }, () => ({
+    id: Math.floor(Math.random() * 100),
+    name: getRandomElement(TAG_NAMES)
+  }));
+}
+
+/**
+ * Get a random element from an array
+ */
+function getRandomElement(array) {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 // Return a randomly generated pet
@@ -40,7 +77,7 @@ router.get('/pets/random', (req, res) => {
 });
 
 // Return multiple randomly generated pets
-router.get('/pets/random/batch/:count', (req, res) => {
+router.get('/pets/random/:count', (req, res) => {
   let count = parseInt(req.params.count, 10);
   
   // Limit to 50 pets maximum
@@ -65,7 +102,7 @@ router.get('/', (req, res) => {
         description: "Returns a randomly generated pet"
       },
       {
-        path: "/api/pets/random/batch/:count",
+        path: "/api/pets/random/:count",
         method: "GET",
         description: "Returns multiple randomly generated pets (max 50)"
       },
