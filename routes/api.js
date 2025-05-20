@@ -76,6 +76,12 @@ router.get('/pets/random', (req, res) => {
   res.json(generateRandomPet());
 });
 
+router.get('/pets/:id', (req, res) => {
+  let pet = generateRandomPet();
+  pet.id = req.params.id;
+  res.json(pet);
+});
+
 // Return multiple randomly generated pets
 router.get('/pets/random/:count', (req, res) => {
   let count = parseInt(req.params.count, 10);
